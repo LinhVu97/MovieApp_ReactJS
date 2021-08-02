@@ -8,6 +8,7 @@ import CustomPagination from '../../Pagination/Pagination'
 const Trending = () => {
     const [page, setPage] = useState(1)
     const [data, setData] = useState([])
+    const [numOfPages, setNumOfPages] = useState()
 
     // Fetch API
     const fetchAPI = async () => {
@@ -17,19 +18,22 @@ const Trending = () => {
 
         // Promise
         setData(data.results)
+        setNumOfPages(data.total_pages)
     }
 
+    
     useEffect(() => {
         fetchAPI()
-    }, [page])
+        // eslint-disable-next-line
+    }, [page]) 
 
     return (
         <div>
             <span className="pageTitle">Trending</span>
             <div className="trending">
-                {
-                    data && data.map(c => (
-                        <Badge badgeContent={c.vote_average} color={c.vote_average >= 7 ? 'primary' : 'secondary'}>
+                {                               // {} check condition: have data and display Card
+                    data && data.map(c => ( 
+                        <Badge key={c.id} badgeContent={c.vote_average} color={c.vote_average >= 7 ? 'primary' : 'secondary'}>
                             <Card
                                 key={c.id}
                                 id={c.id}
@@ -43,8 +47,7 @@ const Trending = () => {
                     ))
                 }
             </div>
-
-            <CustomPagination setPage={setPage}/>
+            <CustomPagination setPage={setPage} numberOfPages={numOfPages}/>
         </div>
     )
 }
